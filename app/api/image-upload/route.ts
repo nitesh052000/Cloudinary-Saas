@@ -12,11 +12,12 @@ import { NextRequest,NextResponse } from 'next/server';
 
 interface cloudinaryUploadResult {
       public_id: string;
-      [key: string]: any;
+      [key: string]: string | number | boolean | object;
 }
 
 export async function POST(request:NextRequest){
-    const {userId} = auth();
+    const authData = await auth();
+    const {userId} = authData;
 
     if(!userId){
         return NextResponse.json(new Error('Unauthorized'), {status:401})

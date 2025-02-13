@@ -16,10 +16,13 @@ const isPublicApiRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
      
-    const {userId} = auth();
+     const authData = await auth();
+     const {userId} = authData;
      const currentURL = new URL(req.url);
      const isAccessingHomePage = currentURL.pathname === "/home"
      const isApiRequest = currentURL.pathname.startsWith('/api')
+
+     console.log("userId",userId);
     
      if(userId && isPublicRoute(req) && !isAccessingHomePage){
         return NextResponse.redirect(new URL("/home", req.url));
