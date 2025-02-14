@@ -8,9 +8,9 @@ const prisma = new PrismaClient();
 
 // Configuration
     cloudinary.config({ 
-        cloud_name: 'dzidl5hzf', 
-        api_key: '365124755136622', 
-        api_secret: '<your_api_secret>' // Click 'View API Keys' above to copy your API secret
+        cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET// Click 'View API Keys' above to copy your API secret
     });
 
 interface cloudinaryUploadResult {
@@ -21,7 +21,9 @@ interface cloudinaryUploadResult {
 }
 
 export async function POST(request:NextRequest){
-    const {userId} = auth();
+
+    const authData = await auth();
+    const {userId} = authData;
 
     if(!userId){
         return NextResponse.json(new Error('Unauthorized'), {status:401})
@@ -34,8 +36,6 @@ export async function POST(request:NextRequest){
         const title = formData.get("title") as string | null;
         const description = formData.get("description") as string | null;
         const originalSize = formData.get("originalSize") as string | null;
-
-
 
 
         if(!file){

@@ -6,16 +6,16 @@ import axios from 'axios';
 
 const socialFormats = {
   "Facebook Cover (205:78)": {
+    width: 820,
+    height: 312,
+    aspectRatio: "205:78",
+  },
+  "Instagram Square (1:1)": {
     width: 1080,
     height: 1080,
     aspectRatio: "1:1",
   },
-  "Intagram Square (1:1)": {
-    width: 1080,
-    height: 1080,
-    aspectRatio: "1:1",
-  },
-  "Intagram Portrait (4:5)": {
+  "Instagram Portrait (4:5)": {
     width: 1080,
     height: 1350,
     aspectRatio: "4:5",
@@ -30,11 +30,6 @@ const socialFormats = {
     height: 500,
     aspectRatio: "3:1",
   },
-  "LinkedIn Post (4:2)": {
-    width: 1200,
-    height: 627,
-    aspectRatio: "4:2",
-  },
 }
 
 type socialFormats = keyof typeof socialFormats;
@@ -43,7 +38,7 @@ const SocialShare = () => {
 
  const [uploadImage, setUploadImage] = useState<string | null>(null);
  const [isUploading, setIsUploading] = useState(false);
- const [selectedFormat,setSelectedFormat] = useState<socialFormats>("Intagram Square (1:1)"); 
+ const [selectedFormat,setSelectedFormat] = useState<socialFormats>("Instagram Square (1:1)"); 
  const [isTransforming, setIsTransforming] = useState(false);
  const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -51,7 +46,7 @@ const SocialShare = () => {
     if(uploadImage){
       setIsTransforming(true);
     }
- },[uploadImage,isTransforming])
+ },[uploadImage])
 
  
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +109,7 @@ const SocialShare = () => {
           </div>
           {isUploading && (
             <div className='mt-4'>
-              <progress className="progress progress-primary w-56" value="0" max="100"></progress>
+              <progress className="progress progress-primary w-full"></progress>
             </div>
           )}
           {uploadImage && (
@@ -148,7 +143,7 @@ const SocialShare = () => {
                    aspectRatio={socialFormats[selectedFormat].aspectRatio}
                    gravity='auto'
                    ref={imageRef}
-                   onLoad={()=> setIsTransforming(false)}
+                   onLoad = {() => setIsTransforming(false)}
                   />
                 </div>
               </div>

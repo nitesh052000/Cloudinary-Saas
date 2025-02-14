@@ -5,9 +5,9 @@ import { NextRequest,NextResponse } from 'next/server';
 
 // Configuration
     cloudinary.config({ 
-        cloud_name: 'dzidl5hzf', 
-        api_key: '365124755136622', 
-        api_secret: '<your_api_secret>' // Click 'View API Keys' above to copy your API secret
+        cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
     });
 
 interface cloudinaryUploadResult {
