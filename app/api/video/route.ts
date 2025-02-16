@@ -10,6 +10,8 @@ export async function GET(request:NextRequest){
             orderBy :{createdAt:"desc"},
           })
 
+          console.log("videos",videos);
+
           return NextResponse.json(videos)
     } catch(error){
         console.log("error",error);

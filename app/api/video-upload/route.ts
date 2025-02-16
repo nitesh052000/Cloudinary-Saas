@@ -1,6 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { PrismaClient } from '@prisma/client/extension';
-
+import { PrismaClient } from '@prisma/client'
 import { v2 as cloudinary } from 'cloudinary';
 import { NextRequest,NextResponse } from 'next/server';
 
@@ -17,7 +16,7 @@ interface cloudinaryUploadResult {
       public_id: string;
       bytes: number;
       duration?: number
-      [key: string]: any;
+      [key: string]: unknown;
 }
 
 export async function POST(request:NextRequest){
@@ -35,7 +34,7 @@ export async function POST(request:NextRequest){
         const file = formData.get("file") as File | null;
         const title = formData.get("title") as string | null;
         const description = formData.get("description") as string | null;
-        const originalSize = formData.get("originalSize") as string | null;
+        const originalSize = formData.get("originalSize") as string;
 
 
         if(!file){
@@ -71,16 +70,16 @@ export async function POST(request:NextRequest){
 
         const video = await prisma.video.create({
             data:{
-                title,
+                title: title ?? '',
                 description,
-                originalSize: originalSize,
+                origialSize: originalSize,
                 publicId: result.public_id,
-                CompressedSize: String(result.bytes),
-                duration: result.duration,
+                compressedSize: String(result.bytes),
+                duration: result.duration ?? 0,
             }
         })
 
-        return NextResponse.json(video)
+        return NextResponse.json(video);
 
     } catch(error){
         console.log("upload image error",error);
