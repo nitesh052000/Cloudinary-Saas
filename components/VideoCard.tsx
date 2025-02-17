@@ -1,19 +1,24 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { getCldImageUrl,getCldVideoUrl } from 'next-cloudinary'
-import { Url } from 'next/dist/shared/lib/router/router';
 import { filesize } from 'filesize';
+import dayjs from 'dayjs';
+import { Clock } from 'lucide-react';
+import relativeTime from "dayjs/plugin/relativeTime";
+import { Download, FileDown, FileUp } from 'lucide-react';
+import { Video } from '@prisma/client';
+dayjs.extend(relativeTime);
 
 interface VideoCardProps {
     video: Video;
-    onDownload :(Url:string,title:string) => void;
+    onDownload :(url:string,title:string) => void;
 }
 
-const VideoCard: React.FC<VideoCardProps>= ({video,onDownload}) => {
+const VideoCard: React.FC<VideoCardProps> = ({video,onDownload}) => {
 
   const [isHovered,setIsHovered] = useState(false);
   const [previewError,setPreviewError] = useState(false);
 
-   const getThumbnailUrl = useCallback((publicId:'string')=>{
+   const getThumbnailUrl = useCallback((publicId:string)=>{
                return getCldImageUrl({
                 src:publicId,
                 width:400,
@@ -26,7 +31,7 @@ const VideoCard: React.FC<VideoCardProps>= ({video,onDownload}) => {
                })
    },[])
 
-   const getFullVideoUrl = useCallback((publicId:'string')=>{
+   const getFullVideoUrl = useCallback((publicId:string)=>{
                return getCldVideoUrl({
                 src:publicId,
                 width:1920,
@@ -35,16 +40,9 @@ const VideoCard: React.FC<VideoCardProps>= ({video,onDownload}) => {
                })
    },[])
 
-   const getFullVideoUrl = useCallback((publicId:'string')=>{
-               return getCldVideoUrl({
-                src:publicId,
-                width:1920,
-                height:1080,
-                
-               })
-     },[])
+   
 
-   const getPreviewVideoUrl = useCallback((publicId:'string')=>{
+   const getPreviewVideoUrl = useCallback((publicId:string)=>{
                return getCldVideoUrl({
                 src:publicId,
                 width:400,
@@ -58,7 +56,21 @@ const VideoCard: React.FC<VideoCardProps>= ({video,onDownload}) => {
              return filesize(size)
     },[])
 
+    const formatDuration = useCallback((seconds: number) => {
+       const minutes = Math.floor(seconds/60);
+       const remainingSeconds = Math.round(seconds%60);
+       return `${minutes}:${remainingSeconds.toString().padStart(2,"0")}`; 
+    },[]);
 
+    const CompressionPercentage = Math.round((1 - Number(video?.compressedSize ?? 0) / Number(video?.origialSize ?? 1)) * 100)
+
+    useEffect(()=>{
+      setPreviewError(false);
+    },[isHovered])
+
+    const handlePreviewError = () => {
+      setPreviewError(true);
+    }
 
   return (
     <div className=' card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300'
@@ -86,7 +98,36 @@ const VideoCard: React.FC<VideoCardProps>= ({video,onDownload}) => {
           {formatDuration(video.duration)}
         </div>
        </figure>
-      
+       <div className=' card-body p-4'>
+        <h2 className='card-title text-lg font-bold'>{video.title}</h2>
+        <p className=' text-sm text-base-content opacity-70 mb-4'>{video.description}</p>
+        <p className=' text-sm text-base-content opacity-70 mb-4'>Uploaded {dayjs(video.createdAt).fromNow()}</p>
+       </div>
+      <div className='grid grid-cols-2 gap-4 text-sm'>
+        <div className=' flex items-center'>
+          <FileUp size={18} className ="mr-2 text-primary" />
+          <div>
+           <h1 className=' font-semibold'>Original</h1>
+           <p>{formatSize(Number(video?.origialSize))}</p>
+          </div>
+        </div>
+        <div className=' flex items-center'>
+          <FileDown size={18} className ="mr-2 text-secondary" />
+          <div>
+           <h1 className=' font-semibold'>Compressed</h1>
+           <p>{formatSize(Number(video?.compressedSize))}</p>
+          </div>
+        </div>
+        <div className='flex justify-between items-center mt-4'>
+          <div className='text-sm font-semibold'>
+            Compression:{" "}
+            <span className=' text-accent'>{CompressionPercentage}%</span>
+          </div>
+          <button onClick={() => onDownload(getFullVideoUrl(video.publicId),video.title)} className=' btn btn-primary btn-sm'>
+            <Download size={16}/>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

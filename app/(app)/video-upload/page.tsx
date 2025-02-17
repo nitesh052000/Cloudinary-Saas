@@ -58,7 +58,7 @@ const VideoUpload = () => {
             <label className='label'>
               <span className=' label-text'>Title</span>
             </label>
-            <input className=' inout input-bordered w-full' type='text' value={title} onChange={(e)=>setTitle(e.target.value)} required></input>
+            <input className='inout input-bordered w-full h-10 bg-base-100 rounded-lg' type='text' value={title} onChange={(e)=>setTitle(e.target.value)} required></input>
           </div>
           <div>
             <label className='label'>
