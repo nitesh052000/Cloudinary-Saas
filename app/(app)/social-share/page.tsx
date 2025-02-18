@@ -95,7 +95,7 @@ const SocialShare = () => {
 
 
   return (
-    <div className=' container mx-auto p-4 mx-w-4xl bg-slate-800'>
+    <div className='container mx-auto p-4 mx-w-4xl bg-slate-800 rounded-md'>
       <h1 className='text-3xl font-bold mb-6 text-center'>Social Media image Creator</h1>
 
       <div className='card'>

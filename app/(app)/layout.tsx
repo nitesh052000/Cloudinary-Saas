@@ -22,7 +22,7 @@ export default function AppLayout({
     const router = useRouter();
     const {user} = useUser();
     const [SidebarOpen,setSidebarOpen] = useState(true);
-    const {sighOut} = useClerk();
+    const {signOut} = useClerk();
     const pathname = usePathname();
 
     console.log("user",user);
@@ -32,7 +32,7 @@ export default function AppLayout({
     }
 
     const handleSighOut = async() =>{
-        await sighOut();
+        await signOut();
     }
 
   return (
@@ -90,7 +90,7 @@ export default function AppLayout({
                         pathname === item.href ? "bg-primary text-wite" : "hover:bg-base-300"
                     }`} href={item.href} onClick={() => setSidebarOpen(false)}>
                     <item.icon className=" w-6 h-6" />
-                    <span className=" font-bold text-white-100">{item.label}</span>
+                    <span className=" font-bold text-white">{item.label}</span>
                     </Link>
                 </li>
                ))}

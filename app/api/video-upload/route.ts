@@ -34,7 +34,7 @@ export async function POST(request:NextRequest){
         const file = formData.get("file") as File | null;
         const title = formData.get("title") as string | null;
         const description = formData.get("description") as string | null;
-        const originalSize = formData.get("originalSize") as string;
+        const origialSize = formData.get("origialSize") as string;
 
 
         if(!file){
@@ -53,7 +53,9 @@ export async function POST(request:NextRequest){
                         folder:"video-uploads",
                         transformation: [
                             {quality:"auto",fetch_format:"mp4"},
-                        ]
+                        ],
+                        
+                    eager_async: true, // Process large videos asynchronously
                     },
                     (error,result) => {
                         if(error){
@@ -72,13 +74,12 @@ export async function POST(request:NextRequest){
             data:{
                 title: title ?? '',
                 description,
-                origialSize: originalSize,
+                origialSize: origialSize,
                 publicId: result.public_id,
                 compressedSize: String(result.bytes),
                 duration: result.duration ?? 0,
             }
         })
-
         return NextResponse.json(video);
 
     } catch(error){

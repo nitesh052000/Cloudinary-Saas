@@ -34,14 +34,13 @@ const VideoUpload = () => {
     formData.append("file",file);
     formData.append("title",title);
     formData.append("description",description);
-    formData.append("originalSize",file.size.toString());
+    formData.append("origialSize",file?.size.toString());
 
     try{
       const response =  await axios.post("api/video-upload",formData);
-
+      
       if(!response) throw new Error("Failed to upload image");
 
-       
     } catch(error){
           console.log("error",error);
     } finally{
@@ -58,7 +57,7 @@ const VideoUpload = () => {
             <label className='label'>
               <span className=' label-text'>Title</span>
             </label>
-            <input className='inout input-bordered w-full h-10 bg-base-100 rounded-lg' type='text' value={title} onChange={(e)=>setTitle(e.target.value)} required></input>
+            <input className='inout input-bordered w-full h-10 bg-base-100 rounded-lg p-2' type='text' value={title} onChange={(e)=>setTitle(e.target.value)} required></input>
           </div>
           <div>
             <label className='label'>
