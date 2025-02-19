@@ -33,6 +33,7 @@ export default function AppLayout({
 
     const handleSighOut = async() =>{
         await signOut();
+        router.push("/sigh-in");
     }
 
   return (
@@ -53,7 +54,7 @@ export default function AppLayout({
                     </Link>
                 </div>
                 <div className=" flex-none flex items-center space-x-4">
-                    {user && (
+                    {user ? (
                         <>
                         <div className=" avatar">
                             <div className=" w-8 h-8">
@@ -65,6 +66,10 @@ export default function AppLayout({
                         </div>
                         <button onClick={handleSighOut} className="btn btn-ghost btn-circle"><LogOutIcon className=" h-6 w-6" /></button>
                         </>
+                    ):(
+                        <Link href="/sign-in">
+                        <button className="btn btn-ghost ">Sign In</button>
+                        </Link>
                     )}
                 </div>
              </div>

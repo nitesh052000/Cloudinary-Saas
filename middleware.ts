@@ -12,8 +12,6 @@ const isPublicApiRoute = createRouteMatcher([
     "/api/video",
 ])
 
-
-
 export default clerkMiddleware(async (auth, req) => {
      
      const authData = await auth();
@@ -28,6 +26,11 @@ export default clerkMiddleware(async (auth, req) => {
         return NextResponse.redirect(new URL("/home", req.url));
      }
      if(!userId){
+       
+      if(currentURL.pathname === "/"){
+        return NextResponse.redirect(new URL("/sign-in",req.url));
+      }
+       
        if(!isPublicRoute(req) && !isPublicApiRoute(req)){
         return NextResponse.redirect(new URL("/sign-in", req.url));
         }
@@ -35,7 +38,7 @@ export default clerkMiddleware(async (auth, req) => {
         return NextResponse.redirect(new URL("/sign-in", req.url));
        }
       }
-      return NextResponse.next()
+      return NextResponse.next();
     })
   
 export const config = {
