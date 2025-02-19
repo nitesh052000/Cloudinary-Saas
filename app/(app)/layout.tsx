@@ -6,6 +6,7 @@ import { ImageIcon, LayoutDashboardIcon, LogOutIcon, MenuIcon, Share2Icon, Uploa
 import { useRouter } from "next/navigation";
 import {useClerk, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const sidebarItems = [
     {href:"/home",label:"Home Page",icon:LayoutDashboardIcon},
@@ -58,7 +59,7 @@ export default function AppLayout({
                         <>
                         <div className=" avatar">
                             <div className=" w-8 h-8">
-                            <img className="w-8 h-8 rounded-full" src={user.imageUrl} alt={user.username} />
+                            <Image className="w-8 h-8 rounded-full" src={user.imageUrl || '/default-avatar.png'} alt={user.username || 'User'} />
                             </div>
                         </div>
                         <div className=" text-sm truncate max-w-xs lg:msx-w-md">
