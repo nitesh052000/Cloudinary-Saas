@@ -1,28 +1,29 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest,NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+// Ensure Prisma does not create multiple instances in serverless environments
+const globalForPrisma = global as unknown as { prisma?: PrismaClient };
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(request:NextRequest){
-      
-    try{
-        const videos =   await prisma.video.findMany({
-            orderBy :{createdAt:"desc"},
-          })
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-          console.log("videos",videos);
+// Force this route to be dynamic (prevents static export issues)
+export const dynamic = "force-dynamic";
 
-          return NextResponse.json(videos)
-    } catch(error){
-        console.log("error",error);
-        return NextResponse.json({
-            status: 500,
-            body: {
-                error: "An error occurred while fetching videos"
-            }
-        })
-    } finally {
-        await prisma.$disconnect();
+export async function GET() {
+    try {
+        const videos = await prisma.video.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+
+        console.log("videos", videos);
+
+        return NextResponse.json(videos);
+    } catch (error) {
+        console.error("Error fetching videos:", error);
+        return NextResponse.json(
+            { error: "An error occurred while fetching videos" },
+            { status: 500 }
+        );
     }
 }
