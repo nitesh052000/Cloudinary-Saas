@@ -59,7 +59,15 @@ export default function AppLayout({
                         <>
                         <div className=" avatar">
                             <div className=" w-8 h-8">
-                            <Image className="w-8 h-8 rounded-full" src={user.imageUrl || '/default-avatar.png'} alt={user.username || 'User'} />
+                            <Image 
+  src={user.imageUrl || '/default-avatar.png'}
+  alt={user.username || 'User'}
+  width={32}  // Adjust to a reasonable size
+  height={32} 
+  className="rounded-full" // Optional styling
+  priority={true} // Set to true if it's a key element (like a profile picture)
+  unoptimized={user.imageUrl?.startsWith('http')} // If using external URLs
+/>
                             </div>
                         </div>
                         <div className=" text-sm truncate max-w-xs lg:msx-w-md">
